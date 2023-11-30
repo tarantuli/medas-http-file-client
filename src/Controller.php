@@ -80,5 +80,4 @@ readonly class Controller implements DataStorage
             ]
         )->code === 201;
     }
-
 }
