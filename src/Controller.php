@@ -62,7 +62,6 @@ readonly class Controller implements DataStorage
         return $this->simpleRequests->get($client->url . $path, ['return' => 'creationTime'])->body;
     }
 
-
     public function store(
         string    $path,
         string    $content,
