@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Medas\HttpFileClient;
 
 use Medas\Core\AsSingleton;
+use Medas\HttpClient\HttpClientPackage;
 use Medas\ServiceManager\BasePackage;
 
 class HttpFileClientPackage extends BasePackage
@@ -13,7 +14,9 @@ class HttpFileClientPackage extends BasePackage
 
     public function dependencies(): array
     {
-        return [];
+        return [
+            HttpClientPackage::instance(),
+        ];
     }
 
     public function sourceDirectory(): string
