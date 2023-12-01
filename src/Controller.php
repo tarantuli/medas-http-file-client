@@ -49,35 +49,26 @@ readonly class Controller implements DataStorage
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->get(
+        $timestamp = $this->simpleRequests->get(
             $client->url . $path,
             ['return' => 'modificationTime']
         )->body;
-    }
 
-    public function creationTime(string $path, Client $client = null): \DateTime|null
-    {
-        $client ??= $this->clientManager->default();
-
-        return $this->simpleRequests->get($client->url . $path, ['return' => 'creationTime'])->body;
+        return $timestamp === null ? null : new \DateTime('@' . $timestamp);
     }
 
     public function store(
         string    $path,
         string    $content,
         \DateTime $modificationTime = null,
-        \DateTime $creationTime = null
+        Client    $client = null,
     ): bool
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->post(
-            $client->url . $path,
-            [
-                'content' => $content,
-                'modificationTime' => $modificationTime,
-                'creationTime' => $creationTime
-            ]
-        )->code === 201;
+        return $this->simpleRequests->post($client->url . $path, [
+            'content' => $content,
+            'modificationTime' => $modificationTime,
+        ])->code === 201;
     }
 }
