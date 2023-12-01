@@ -21,28 +21,28 @@ readonly class Controller implements DataStorage
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->get($client->url . DIRECTORY_SEPARATOR . $path, ['return' => 'null'])->code === 204;
+        return $this->simpleRequests->get($client->url . '/' . $path, ['return' => 'null'])->code === 204;
     }
 
     public function delete(string $path, Client $client = null): bool
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->delete($client->url . DIRECTORY_SEPARATOR . $path)->code === 200;
+        return $this->simpleRequests->delete($client->url . '/' . $path)->code === 200;
     }
 
     public function content(string $path, Client $client = null): string|null
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->get($client->url . DIRECTORY_SEPARATOR . $path)->body;
+        return $this->simpleRequests->get($client->url . '/' . $path)->body;
     }
 
     public function size(string $path, Client $client = null): string|null
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->get($client->url . DIRECTORY_SEPARATOR . $path, ['return' => 'size'])->body;
+        return $this->simpleRequests->get($client->url . '/' . $path, ['return' => 'size'])->body;
     }
 
     public function modificationTime(string $path, Client $client = null): \DateTime|null
@@ -50,7 +50,7 @@ readonly class Controller implements DataStorage
         $client ??= $this->clientManager->default();
 
         $timestamp = $this->simpleRequests->get(
-            $client->url . DIRECTORY_SEPARATOR . $path,
+            $client->url . '/' . $path,
             ['return' => 'modificationTime']
         )->body;
 
@@ -66,7 +66,7 @@ readonly class Controller implements DataStorage
     {
         $client ??= $this->clientManager->default();
 
-        return $this->simpleRequests->post($client->url . DIRECTORY_SEPARATOR . $path, [
+        return $this->simpleRequests->post($client->url . '/' . $path, [
             'content' => $content,
             'modificationTime' => $modificationTime,
         ])->code === 201;
