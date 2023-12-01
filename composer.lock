@@ -59,12 +59,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:tarantuli/medas-http-client.git",
-                "reference": "c2d1e0ca6079f32eb0d8a4e5dbe6d114284f86d4"
+                "reference": "ceeb135efd7ec091fd53af225dd3aa5a64f99321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-http-client/zipball/c2d1e0ca6079f32eb0d8a4e5dbe6d114284f86d4",
-                "reference": "c2d1e0ca6079f32eb0d8a4e5dbe6d114284f86d4",
+                "url": "https://api.github.com/repos/tarantuli/medas-http-client/zipball/ceeb135efd7ec091fd53af225dd3aa5a64f99321",
+                "reference": "ceeb135efd7ec091fd53af225dd3aa5a64f99321",
                 "shasum": ""
             },
             "require": {
@@ -94,7 +94,7 @@
                 "source": "https://github.com/tarantuli/medas-http-client/tree/dev",
                 "issues": "https://github.com/tarantuli/medas-http-client/issues"
             },
-            "time": "2023-12-01T10:38:07+00:00"
+            "time": "2023-12-01T14:27:18+00:00"
         },
         {
             "name": "psr/event-dispatcher",
