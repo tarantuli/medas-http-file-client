@@ -5,54 +5,52 @@ declare(strict_types=1);
 namespace Medas\HttpFileClient;
 
 use Medas\Core\{Attributes\Service, Interfaces\DataStorage};
-use Medas\HttpClient\SimpleRequests;
+use Medas\HttpClient\{Body, Request, RequestController, ResponseCodes};
 
 #[Service]
 readonly class Controller implements DataStorage
 {
     public function __construct(
-        private ClientManager  $clientManager,
-        private SimpleRequests $simpleRequests,
+        private ClientManager     $clientManager,
+        private RequestController $requestController,
     )
     {
     }
 
     public function exists(string $path, Client $client = null): bool
     {
-        $client ??= $this->clientManager->default();
+        $request = $this->createRequest($client, $path, ['return' => 'null']);
 
-        return $this->simpleRequests->get($client->url . '/' . $path, ['return' => 'null'])->code === 204;
+        return $this->requestController->execute($request)->code === ResponseCodes::NO_CONTENT;
     }
 
     public function delete(string $path, Client $client = null): bool
     {
-        $client ??= $this->clientManager->default();
+        $request = $this->createRequest($client, $path);
 
-        return $this->simpleRequests->delete($client->url . '/' . $path)->code === 200;
+        $request->method = 'DELETE';
+
+        return $this->requestController->execute($request)->code === ResponseCodes::OK;
     }
 
     public function content(string $path, Client $client = null): string|null
     {
-        $client ??= $this->clientManager->default();
+        $request = $this->createRequest($client, $path);
 
-        return $this->simpleRequests->get($client->url . '/' . $path)->body;
+        return $this->requestController->execute($request)->body;
     }
 
     public function size(string $path, Client $client = null): string|null
     {
-        $client ??= $this->clientManager->default();
+        $request = $this->createRequest($client, $path, ['return' => 'size']);
 
-        return $this->simpleRequests->get($client->url . '/' . $path, ['return' => 'size'])->body;
+        return $this->requestController->execute($request)->body;
     }
 
     public function modificationTime(string $path, Client $client = null): \DateTime|null
     {
-        $client ??= $this->clientManager->default();
-
-        $timestamp = $this->simpleRequests->get(
-            $client->url . '/' . $path,
-            ['return' => 'modificationTime']
-        )->body;
+        $request = $this->createRequest($client, $path, ['return' => 'modificationTime']);
+        $timestamp = $this->requestController->execute($request)->body;
 
         return $timestamp === null ? null : new \DateTime('@' . $timestamp);
     }
@@ -64,11 +62,29 @@ readonly class Controller implements DataStorage
         Client    $client = null,
     ): bool
     {
-        $client ??= $this->clientManager->default();
+        $request = $this->createRequest($client, $path);
 
-        return $this->simpleRequests->post($client->url . '/' . $path, [
+        $request->method = 'POST';
+
+        $request->body = new Body([
             'content' => $content,
             'modificationTime' => $modificationTime,
-        ])->code === 201;
+        ]);
+
+        return $this->requestController->execute($request)->code === ResponseCodes::CREATED;
+    }
+
+    private function createRequest(Client|null $client, string $path, array $queryArguments = []): Request
+    {
+        $client ??= $this->clientManager->default();
+        $request = new Request($client->url . '/' . $path);
+
+        if ($client->authorizationHeader !== null) {
+            $request->headers['Authorization'] = $client->authorizationHeader;
+        }
+
+        $request->queryArguments = $queryArguments;
+
+        return $request;
     }
 }
