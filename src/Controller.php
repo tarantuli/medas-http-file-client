@@ -69,7 +69,7 @@ readonly class Controller implements DataStorage
         $request->body = new Body([
             'content' => $content,
             'modificationTime' => $modificationTime,
-        ]);
+        ], 'application/json');
 
         return $this->requestController->execute($request)->code === ResponseCodes::CREATED;
     }
