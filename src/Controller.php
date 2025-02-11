@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Medas\HttpFileClient;
 
 use Medas\Core\{Attributes\Service, Interfaces\DataStorage};
-use Medas\HttpClient\{Body, Request, RequestController, ResponseCodes};
+use Medas\HttpClient\{Body, Exceptions\BadRequest, Request, RequestController, ResponseCodes};
 
 #[Service]
 readonly class Controller implements DataStorage
@@ -21,7 +21,12 @@ readonly class Controller implements DataStorage
     {
         $request = $this->createRequest($client, $path, ['return' => 'null']);
 
-        return $this->requestController->execute($request)->code === ResponseCodes::NO_CONTENT;
+        try {
+            return $this->requestController->execute($request)->code === ResponseCodes::NO_CONTENT;
+        }
+        catch (BadRequest) {
+            return false;
+        }
     }
 
     public function delete(string $path, Client $client = null): bool
