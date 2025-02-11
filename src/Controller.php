@@ -35,7 +35,12 @@ readonly class Controller implements DataStorage
 
         $request->method = 'DELETE';
 
-        return $this->requestController->execute($request)->code === ResponseCodes::OK;
+        try {
+            return $this->requestController->execute($request)->code === ResponseCodes::OK;
+        }
+        catch (BadRequest) {
+            return false;
+        }
     }
 
     public function content(string $path, Client $client = null): string|null
