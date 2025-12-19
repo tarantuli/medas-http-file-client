@@ -17,7 +17,7 @@ readonly class Controller implements DataStorage
     {
     }
 
-    public function exists(string $path, Client $client = null): bool
+    public function exists(string $path, Client|null $client = null): bool
     {
         $request = $this->createRequest($client, $path, ['return' => 'null']);
 
@@ -29,7 +29,7 @@ readonly class Controller implements DataStorage
         }
     }
 
-    public function delete(string $path, Client $client = null): bool
+    public function delete(string $path, Client|null $client = null): bool
     {
         $request = $this->createRequest($client, $path);
 
@@ -43,21 +43,21 @@ readonly class Controller implements DataStorage
         }
     }
 
-    public function content(string $path, Client $client = null): string|null
+    public function content(string $path, Client|null $client = null): string|null
     {
         $request = $this->createRequest($client, $path);
 
         return $this->requestController->execute($request)->body;
     }
 
-    public function size(string $path, Client $client = null): string|null
+    public function size(string $path, Client|null $client = null): string|null
     {
         $request = $this->createRequest($client, $path, ['return' => 'size']);
 
         return $this->requestController->execute($request)->body;
     }
 
-    public function modificationTime(string $path, Client $client = null): \DateTime|null
+    public function modificationTime(string $path, Client|null $client = null): \DateTime|null
     {
         $request = $this->createRequest($client, $path, ['return' => 'modificationTime']);
         $timestamp = $this->requestController->execute($request)->body;
@@ -66,10 +66,10 @@ readonly class Controller implements DataStorage
     }
 
     public function store(
-        string    $path,
-        string    $content,
-        \DateTime $modificationTime = null,
-        Client    $client = null,
+        string         $path,
+        string         $content,
+        \DateTime|null $modificationTime = null,
+        Client|null    $client = null,
     ): bool
     {
         $request = $this->createRequest($client, $path);
