@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\HttpFileClient;
 
-use Medas\Core\AsSingleton;
+use Medas\Core\{AsSingleton, BasePackage};
 use Medas\HttpClient\HttpClientPackage;
-use Medas\ServiceManager\BasePackage;
 
 class HttpFileClientPackage extends BasePackage
 {

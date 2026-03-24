@@ -9,14 +9,14 @@ use Medas\Core\Attributes\Service;
 #[Service]
 class ClientManager
 {
-    /** @var Client[] */
+    /** @var array<string, Client> */
     private array $clients = [];
 
-    private Client $default;
+    private Client|null $default = null;
 
     public function register(Client $client, bool $asDefault = false): void
     {
-        $this->clients[] = $client;
+        $this->clients[$client->url] = $client;
 
         if ($asDefault || count($this->clients) === 1) {
             $this->default = $client;
@@ -25,6 +25,15 @@ class ClientManager
 
     public function default(): Client
     {
+        if ($this->default === null) {
+            throw new \RuntimeException('No HTTP file client has been registered.');
+        }
+
         return $this->default;
+    }
+
+    public function find(string $url): Client|null
+    {
+        return $this->clients[$url] ?? null;
     }
 }

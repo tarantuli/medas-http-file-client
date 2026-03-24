@@ -45,31 +45,45 @@ readonly class Controller implements DataStorage
 
     public function content(string $path, Client|null $client = null): string|null
     {
-        $request = $this->createRequest($client, $path);
-
-        return $this->requestController->execute($request)->body;
+        try {
+            return $this->requestController->execute($this->createRequest($client, $path))->body;
+        }
+        catch (BadRequest) {
+            return null;
+        }
     }
 
     public function size(string $path, Client|null $client = null): string|null
     {
-        $request = $this->createRequest($client, $path, ['return' => 'size']);
-
-        return $this->requestController->execute($request)->body;
+        try {
+            return $this->requestController->execute($this->createRequest($client, $path, ['return' => 'size']))->body;
+        }
+        catch (BadRequest) {
+            return null;
+        }
     }
 
-    public function modificationTime(string $path, Client|null $client = null): \DateTime|null
+    public function modificationTime(string $path, Client|null $client = null): ?\DateTime
     {
-        $request = $this->createRequest($client, $path, ['return' => 'modificationTime']);
-        $timestamp = $this->requestController->execute($request)->body;
+        try {
+            $timestamp = $this->requestController->execute($this->createRequest(
+                $client,
+                $path,
+                ['return' => 'modificationTime']
+            ))->body;
+        }
+        catch (BadRequest) {
+            return null;
+        }
 
         return $timestamp === null ? null : new \DateTime('@' . $timestamp);
     }
 
     public function store(
-        string         $path,
-        string         $content,
-        \DateTime|null $modificationTime = null,
-        Client|null    $client = null,
+        string                  $path,
+        string                  $content,
+        \DateTimeInterface|null $modificationTime = null,
+        Client|null             $client = null,
     ): bool
     {
         $request = $this->createRequest($client, $path);
@@ -78,7 +92,7 @@ readonly class Controller implements DataStorage
 
         $request->body = new Body([
             'content' => $content,
-            'modificationTime' => $modificationTime,
+            'modificationTime' => $modificationTime?->getTimestamp(),
         ], 'application/json');
 
         return $this->requestController->execute($request)->code === ResponseCodes::CREATED;
@@ -87,7 +101,7 @@ readonly class Controller implements DataStorage
     private function createRequest(Client|null $client, string $path, array $queryArguments = []): Request
     {
         $client ??= $this->clientManager->default();
-        $request = new Request($client->url . '/' . $path);
+        $request = new Request(rtrim($client->url, '/') . '/' . ltrim($path, '/'));
 
         if ($client->authorizationHeader !== null) {
             $request->headers['Authorization'] = $client->authorizationHeader;

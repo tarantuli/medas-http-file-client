@@ -1,32 +1,34 @@
 {
-    "name": "morphp/medas-http-file-client",
-    "description": "Medas http file client",
-    "keywords": [
-        "http",
-        "storage"
-    ],
-    "authors": [
-        {
-            "name": "Patrick Morpey",
-            "email": "patrick@morphp.nl"
-        }
-    ],
-    "type": "library",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "morphp/medas-core": "dev-dev",
-        "morphp/medas-http-client": "dev-dev",
-        "ext-curl": "*"
-    },
-    "require-dev": {
-        "morphp/medas-service-manager": "dev-dev",
-        "phpunit/phpunit": "^9.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Medas\\HttpFileClient\\": "src/",
-            "Medas\\HttpFileClientTest\\": "tests/"
-        }
+  "name": "morphp/medas-http-file-client",
+  "description": "Medas http file client",
+  "keywords": [
+    "http",
+    "storage"
+  ],
+  "authors": [
+    {
+      "name": "Patrick Morpey",
+      "email": "patrick@morphp.nl"
     }
+  ],
+  "type": "library",
+  "require": {
+    "morphp/medas-core": "^3",
+    "morphp/medas-http-client": "^3"
+  },
+  "require-dev": {
+    "morphp/medas-object-instantiator": "^3",
+    "morphp/medas-service-manager": "^3",
+    "phpunit/phpunit": "^10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Medas\\HttpFileClient\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Medas\\HttpFileClientTest\\": "tests/"
+    }
+  }
 }
