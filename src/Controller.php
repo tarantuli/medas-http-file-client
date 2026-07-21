@@ -63,7 +63,7 @@ readonly class Controller implements DataStorage
         }
     }
 
-    public function modificationTime(string $path, Client|null $client = null): ?\DateTime
+    public function modificationTime(string $path, Client|null $client = null): \DateTime|null
     {
         try {
             $timestamp = $this->requestController->execute($this->createRequest(
