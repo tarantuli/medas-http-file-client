@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace Medas\HttpFileClient;
 
 use Medas\Core\{Attributes\Service, Interfaces\DataStorage};
-use Medas\HttpClient\{Body, Exceptions\BadRequest, Request, RequestController, ResponseCodes};
+use Medas\HttpClient\{
+    Body,
+    Exceptions\BadRequest,
+    Interfaces\RequestController,
+    Request,
+    ResponseCodes
+};
 
 #[Service]
 readonly class Controller implements DataStorage
